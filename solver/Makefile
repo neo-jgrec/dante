@@ -14,7 +14,8 @@ TESTS_DIR				:=	$(wildcard tests/)
 IGNORE_FILE				:=	.gitignore
 CONDING_STYLE_LOG		:=	coding-style-reports.log
 
-$(PROGRAM)_SRCS			:=	$(shell find . -type f -name '*.c' ! -name ".*")
+$(PROGRAM)_SRCS			:=	$(patsubst ./%,%,$(shell find -type f			\
+							-name '*.c' ! -name ".*"))
 $(TEST_PROGRAM)_SRCS	:=	$(shell find $(TESTS_DIR) -type f				\
 							-name 'test_*.c' ! -name ".*" ! -name "main.c")
 
