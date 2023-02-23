@@ -53,8 +53,10 @@ int solve(FILE *stream)
     fread(buffer, s.st_size, sizeof(char), stream);
     buffer[s.st_size] = 0;
     map_t map = {.map = NULL, .height = 0, .width = 0};
-    if (setup_map(buffer, &map, s.st_size))
+    if (setup_map(buffer, &map, s.st_size)) {
+        free(buffer);
         return 84;
+    }
     fill_accessible(&map, 0, 0);
     for (size_t i = map.width; (i + 1) / (map.width + 1) < map.height + 1; i += map.width + 1)
         buffer[i] = '\n';
