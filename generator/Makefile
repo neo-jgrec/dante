@@ -25,7 +25,7 @@ $(TEST_PROGRAM)_OBJS	:=	$($(TEST_PROGRAM)_SRCS:.c=.o)
 $(PROGRAM)_DEPS			:=	$($(PROGRAM)_SRCS:.c=.d)
 $(TEST_PROGRAM)_DEPS	:=	$($(TEST_PROGRAM)_SRCS:.c=.d)
 LIBS					:=	$(COMPILED_LIBS)
-INCLUDE_DIRS			:=	../include/ ./
+INCLUDE_DIRS			:=	../include/ ./ include/
 RM						:=	rm -f
 CC						:=	gcc
 CFLAGS					=	$(INCLUDE_DIRS:%=-I%)							\

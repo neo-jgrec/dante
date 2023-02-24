@@ -1,0 +1,29 @@
+-e ##
+## EPITECH PROJECT, 2022
+## Generator
+## File description:
+## .gitignore
+##
+
+# Ignore object files
+-e
+main.o
+-e
+
+
+# Ignore dependency files
+-e
+main.d
+-e
+
+
+# Ignore binary files
+generator
+generator_tests
+a.out
+
+# Ignore coverage reports
+*.gc*
+
+# Ignore coding-style logs
+coding-style-reports.log
