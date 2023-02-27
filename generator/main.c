@@ -7,18 +7,44 @@
 
 #include "generator.h"
 
-void perfect_maze(generator_t *generator);
-void imperfect_maze(generator_t *generator);
-
-void init_maze(generator_t *generator)
-{
-    generator->maze.map = malloc(sizeof(int *) * generator->maze.height);
-    for (int i = 0; i < generator->maze.height; i++) {
-        generator->maze.map[i] = malloc(sizeof(int) * generator->maze.width);
-        for (int j = 0; j < generator->maze.width; j++)
-            generator->maze.map[i][j] = 0;
+void printMaze(int *maze, int width, int height) {
+    int x, y;
+    for (y = 0; y < height; y++) {
+        for (x = 0; x < width; x++) {
+            if (MAZE(x, y) == 0) {
+                printf("*");
+            } else {
+                printf("X");
+            }
+        }
+        printf("\n");
     }
 }
+
+void generateMaze(int *maze, int width, int height, int x, int y)
+{
+    int dir[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    int dirOrder[4] = {0, 1, 2, 3};
+    int i, j, tmp, dirIndex, nextX, nextY;
+
+    for (i = 0; i < 4; i++) {
+        j = rand() % 4;
+        tmp = dirOrder[i];
+        dirOrder[i] = dirOrder[j];
+        dirOrder[j] = tmp;
+    }
+    for (i = 0; i < 4; i++) {
+        dirIndex = dirOrder[i];
+        nextX = x + dir[dirIndex][0] * 2;
+        nextY = y + dir[dirIndex][1] * 2;
+        if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height && MAZE(nextX, nextY) == 1) {
+            MAZE(x + dir[dirIndex][0], y + dir[dirIndex][1]) = 0;
+            MAZE(nextX, nextY) = 0;
+            generateMaze(maze, width, height, nextX, nextY);
+        }
+    }
+}
+
 
 int main(int ac, char **av)
 {
@@ -38,28 +64,21 @@ int main(int ac, char **av)
     else
         generator.status = IMPERFECT;
 
-    init_maze(&generator);
+    generator.maze.map = malloc(sizeof(int) * generator.maze.width * generator.maze.height);
     generator.seed = time(NULL);
+    srand(generator.seed);
 
     if (generator.status == PERFECT)
-        perfect_maze(&generator);
-    else
-        imperfect_maze(&generator);
-
-    for (int i = 0; i < generator.maze.height; i++) {
-        for (int j = 0; j < generator.maze.width; j++)
-            printf("%d", generator.maze.map[i][j]);
-        printf("\n");
+        printf("Perfect maze not implemented yet\n");
+    else {
+        for (int i = 0; i < generator.maze.width * generator.maze.height; i++)
+            generator.maze.map[i] = 1;
+        generator.maze.map[0] = 0;
+        generateMaze(generator.maze.map, generator.maze.width, generator.maze.height, START_X, START_Y);
+        generator.maze.map[generator.maze.width * generator.maze.height - 1] = 0;
+        printMaze(generator.maze.map, generator.maze.width, generator.maze.height);
     }
 
+
     return 0;
-}
-
-void perfect_maze(generator_t *generator)
-{
-}
-
-
-void imperfect_maze(generator_t *generator)
-{
 }

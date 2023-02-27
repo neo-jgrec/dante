@@ -15,14 +15,11 @@
     #include <unistd.h>
     #include <time.h>
 
-    #define EAST 0
-    #define SOUTH 1
-    #define WEST 2
-    #define NORTH 3
-
-    #define VISITED 1
-    #define UNVISITED 0
-    #define BACKTRACKED 2
+    #define MAZE(x, y) (maze[(y) * width + (x)])
+    #define START_X 0
+    #define START_Y 0
+    #define END_X (width-1)
+    #define END_Y (height-1)
 
     typedef enum direction {
         UP,
@@ -40,7 +37,7 @@
     typedef struct maze {
         int width;
         int height;
-        int **map;
+        int *map;
     } maze_t;
 
     typedef struct generator {
