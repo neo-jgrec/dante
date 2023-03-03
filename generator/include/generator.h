@@ -14,20 +14,8 @@
     #include <stdlib.h>
     #include <unistd.h>
     #include <time.h>
-
-    #define MAZE(x, y) (maze[(y) * width + (x)])
-    #define START_X 0
-    #define START_Y 0
-    #define END_X (width-1)
-    #define END_Y (height-1)
-
-    typedef enum direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        NONE
-    } direction_t;
+    #include <stdbool.h>
+    #include <stdint.h>
 
     typedef enum status {
         PERFECT,
@@ -37,14 +25,15 @@
     typedef struct maze {
         int width;
         int height;
-        int *map;
+        char *map;
     } maze_t;
 
     typedef struct generator {
         maze_t maze;
-        __uint128_t seed;
         status_t status;
-        direction_t direction;
+        uint64_t seed;
     } generator_t;
+
+    char *maze_generation(int x, int y, status_t status);
 
 #endif /* !GENERATOR_H_ */
