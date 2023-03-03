@@ -1,4 +1,4 @@
--e ##
+##
 ## EPITECH PROJECT, 2022
 ## Generator
 ## File description:
@@ -6,15 +6,13 @@
 ##
 
 # Ignore object files
--e
 main.o
--e
+generation.o
 
 
 # Ignore dependency files
--e
 main.d
--e
+generation.d
 
 
 # Ignore binary files
