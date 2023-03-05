@@ -22,9 +22,8 @@ int main(int ac, char **av)
 
     if (ac < 3)
         return 84;
-    generator.maze.width = atoi(av[1]);
-    generator.maze.height = atoi(av[2]);
-    if (generator.maze.width <= 1 || generator.maze.height <= 1)
+    generator.maze.size = (vector2i_t){atoi(av[1]), atoi(av[2])};
+    if (generator.maze.size.x <= 1 || generator.maze.size.y <= 1)
         return 84;
     if (ac == 4 && strcmp(av[3], "perfect") == 0)
         generator.status = PERFECT;
@@ -34,9 +33,9 @@ int main(int ac, char **av)
         return 84;
     generator.seed = time(NULL);
     srand(generator.seed);
-    generator.maze.map = maze_generation(generator.maze.width,
-    generator.maze.height, generator.status);
-    print_maze(generator.maze.map, generator.maze.width,
-    generator.maze.height);
+    generator.maze.map = maze_generation(generator.maze.size.x,
+    generator.maze.size.y, generator.status);
+    print_maze(generator.maze.map, generator.maze.size.x,
+    generator.maze.size.y);
     return 0;
 }
