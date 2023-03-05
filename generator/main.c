@@ -28,8 +28,10 @@ int main(int ac, char **av)
         return 84;
     if (ac == 4 && strcmp(av[3], "perfect") == 0)
         generator.status = PERFECT;
-    else
+    else if (ac == 3 || (ac == 4 && strcmp(av[3], "imperfect") == 0))
         generator.status = IMPERFECT;
+    else
+        return 84;
     generator.seed = time(NULL);
     srand(generator.seed);
     generator.maze.map = maze_generation(generator.maze.width,
