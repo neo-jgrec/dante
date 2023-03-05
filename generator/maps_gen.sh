@@ -36,6 +36,7 @@ array_test=(\
     "10000 10000 perfect" \
     "50 50 perfect" \
     "50 50" \
+    "100 100 perfect" \
     "fail" \
     "10 10 perfect but its a fail" \
 )
