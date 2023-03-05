@@ -2,11 +2,20 @@
 # Generator tester Script by @jgreclevrai
 
 # Test folder
-folder=$(pwd | grep -q "generator" && echo "../maps" || echo "maps")
+# if the current folder is generator or solver, the maps folder is ../maps
+is_generator=$(pwd | grep -q "generator" && echo "1" || echo "0")
+is_solver=$(pwd | grep -q "solver" && echo "1" || echo "0")
+if [ $is_generator -eq 1 ] ; then
+    folder="../maps"
+elif [ $is_solver -eq 1 ] ; then
+    folder="../maps"
+else
+    folder="maps"
+fi
 mkdir -p $folder && rm -f $folder/*
 
-# Binary name can be generator or generator/generator or ../generator/generator
-bin_name=$(pwd | grep -q "generator" && echo "./generator" || echo "generator/generator")
+# Binary name can be generator or generator/generator or ./../generator/generator
+bin_name=$(pwd | grep -q "generator" && echo "generator" || echo "./../generator/generator")
 echo "Binary name: $bin_name"
 
 # Makefile actions in silent mode if generator binary doesn't exist
