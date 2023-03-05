@@ -2,7 +2,8 @@
 # Generator tester Script by @jgreclevrai
 
 # Test folder
-mkdir -p tests
+folder=../mazes
+mkdir -p $folder
 
 # # Makefile actions in silent mode if generator binary doesn't exist
 if [ ! -f generator ] ; then
@@ -22,8 +23,9 @@ array_test=(\
 )
 
 for test in "${array_test[@]}" ; do
+    time_start=$(date +%s%N)
     file_name=$(echo $test | sed 's/ /_/g')
-    ./generator $test &> tests/$file_name\
-    && echo -e "\e[32m[OK]\e[0m \`$test\`"\
-    || (echo -e "\e[31m[KO]\e[0m \`$test\`" && rm -f tests/$file_name)
+    ./generator $test &> $folder/$file_name\
+    && (echo -en "\e[32m[OK]\e[0m \`$test\`" && time_end=$(date +%s%N) && time_diff_sec=$(echo "scale=3; ($time_end - $time_start) / 1000000000" | bc) && echo -e " (\e[33m$time_diff_sec\e[0ms)")\
+    || (echo -e "\e[31m[KO]\e[0m \`$test\` " && rm -f $folder/$file_name)
 done
