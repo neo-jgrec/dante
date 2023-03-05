@@ -22,9 +22,13 @@
         IMPERFECT
     } status_t;
 
+    typedef struct vector2i {
+        int x;
+        int y;
+    } vector2i_t;
+
     typedef struct maze {
-        int width;
-        int height;
+        vector2i_t size;
         char *map;
     } maze_t;
 
