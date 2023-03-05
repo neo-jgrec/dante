@@ -31,3 +31,11 @@ while read -n 1 char; do
         echo "0 0 0" >> $output_file
     fi
 done < $input_file
+
+# If terminal is kitty, display the image
+if [ "$TERM" = "xterm-kitty" ]; then
+    upscaled_image=$(mktemp)
+    convert $output_file -resize 400% $upscaled_image
+    kitty +kitten icat --align=left $upscaled_image
+    rm $upscaled_image
+fi
