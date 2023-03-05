@@ -21,7 +21,7 @@ fi
 mkdir -p $folder && rm -f $folder/*
 
 # Find generator binary
-bin_name=$(find $parent_dir -maxdepth 2 -type f -name "generator" | grep -v "\./\." | head -n 1)
+bin_name=$parent_dir/generator/generator
 
 # Makefile actions in silent mode if generator binary doesn't exist
 if [ ! -f $bin_name ] ; then
