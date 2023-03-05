@@ -4,9 +4,11 @@
 # Test folder
 mkdir -p tests
 
-# Makefile actions in silent mode
-make re &> /dev/null
-make clean &> /dev/null
+# # Makefile actions in silent mode if generator binary doesn't exist
+if [ ! -f generator ] ; then
+    make re &> /dev/null
+    make clean &> /dev/null
+fi
 
 array_test=(\
     "10 10 perfect" \
