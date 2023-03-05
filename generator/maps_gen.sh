@@ -1,8 +1,14 @@
 #!/bin/bash
 # Generator tester Script by @jgreclevrai
 
+# If not in dante folder, stop
+parent_dir=$(pwd | sed 's/\/generator//g' | sed 's/\/solver//g')
+if [ ! -f $parent_dir/Makefile ] ; then
+    echo "Error: not in dante folder"
+    exit 1
+fi
+
 # Test folder
-# if the current folder is generator or solver, the maps folder is ../maps
 is_generator=$(pwd | grep -q "generator" && echo "1" || echo "0")
 is_solver=$(pwd | grep -q "solver" && echo "1" || echo "0")
 if [ $is_generator -eq 1 ] ; then
@@ -14,9 +20,8 @@ else
 fi
 mkdir -p $folder && rm -f $folder/*
 
-# Binary name can be generator or generator/generator or ./../generator/generator
-bin_name=$(pwd | grep -q "generator" && echo "generator" || echo "./../generator/generator")
-echo "Binary name: $bin_name"
+# Find generator binary
+bin_name=$(find $parent_dir -maxdepth 2 -type f -name "generator" | grep -v "\./\." | head -n 1)
 
 # Makefile actions in silent mode if generator binary doesn't exist
 if [ ! -f $bin_name ] ; then
