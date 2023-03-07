@@ -25,20 +25,14 @@ static _Bool setup_map(char *buffer, map_t *map, size_t file_size)
 
 static _Bool backtrack(map_t *map, size_t x, size_t y)
 {
-    if (x == MAPW - 1 && y == MAPH - 1) {
+    if ((x == MAPW - 1 && y == MAPH - 1)
+        || ((x < MAPW - 1 && map->map[y * (MAPW + 1) + x + 1] == '*')
+            && (backtrack(map, x + 1, y)))
+        || ((y < MAPH - 1 && map->map[(y + 1) * (MAPW + 1) + x] == '*')
+            && (backtrack(map, x, y + 1)))) {
         map->map[y * (MAPW + 1) + x] = 'o';
         return 1;
     }
-    if (x < MAPW - 1 && map->map[y * (MAPW + 1) + x + 1] == '*')
-        if (backtrack(map, x + 1, y)) {
-            map->map[y * (MAPW + 1) + x] = 'o';
-            return 1;
-        }
-    if (y < MAPH - 1 && map->map[(y + 1) * (MAPW + 1) + x] == '*')
-        if (backtrack(map, x, y + 1)) {
-            map->map[y * (MAPW + 1) + x] = 'o';
-            return 1;
-        }
     return 0;
 }
 
@@ -53,8 +47,10 @@ int solve(FILE *stream)
     if (setup_map(buffer, &map, s.st_size)) {
         free(buffer); return 84;
     }
-    backtrack(&map, 0, 0);
-    fwrite(buffer, s.st_size, sizeof(char), stdout);
+    if (backtrack(&map, 0, 0))
+        fwrite(buffer, s.st_size, sizeof(char), stdout);
+    else
+        printf("no solution found\n");
     free(buffer);
     return 0;
 }
