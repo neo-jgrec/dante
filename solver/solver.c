@@ -49,7 +49,7 @@ int solve(FILE *stream)
     if (backtrack(&map, 0, 0))
         fwrite(buffer, s.st_size, sizeof(char), stdout);
     else
-        printf("no solution found\n");
+        printf("no solution found");
     free(buffer);
     return 0;
 }
