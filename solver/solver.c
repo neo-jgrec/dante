@@ -40,9 +40,8 @@ int solve(FILE *stream)
 {
     struct stat s;
     fstat(fileno(stream), &s);
-    char *buffer = malloc(s.st_size + 1);
+    char *buffer = malloc(s.st_size);
     fread(buffer, s.st_size, sizeof(char), stream);
-    buffer[s.st_size] = 0;
     map_t map = {.map = buffer, .height = 0, .width = 0};
     if (setup_map(buffer, &map, s.st_size)) {
         free(buffer); return 84;
