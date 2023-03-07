@@ -22,7 +22,7 @@ echo "255" >> $output_file
 while read -n 1 char; do
     if [ "$char" = "o" ]; then
         # Yellow
-        echo "255 255 0" >> $output_file
+        echo "255 0 0" >> $output_file
     elif [ "$char" = "*" ]; then
         # White
         echo "255 255 255" >> $output_file
