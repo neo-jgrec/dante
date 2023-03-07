@@ -54,8 +54,6 @@ int solve(FILE *stream)
         free(buffer); return 84;
     }
     backtrack(&map, 0, 0);
-    for (size_t i = map.width; (i + 1) / (map.width + 1) < map.height + 1; i += map.width + 1)
-        buffer[i] = '\n';
     fwrite(buffer, s.st_size, sizeof(char), stdout);
     free(buffer);
     return 0;
