@@ -12,6 +12,7 @@
 
     #define MAPW map->width
     #define MAPH map->height
+    #define MAPCHAR(x, y) map->map[(y) * (MAPW + 1) + (x)]
 
 typedef struct map_s {
     char *map;
