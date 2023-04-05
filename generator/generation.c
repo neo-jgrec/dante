@@ -47,9 +47,8 @@ char *maze_generation(int x, int y, status_t status)
     for (int i = 2; i < y; i += 2) {
         for (int j = 2; j < x; j += 2) {
             maze[i * x + j] = '*';
-            (rand() % 2 == 1)
-            ? (maze[(i - 1) * x + j] = '*')
-            : (maze[i * x + j - 1] = '*');
+            maze[(rand() % 2) ? ((i - 1) * x + j)
+                : (i * x + j - 1)] = '*';
         }
     }
     return (maze);
