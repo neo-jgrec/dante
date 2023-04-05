@@ -30,7 +30,7 @@ re:	fclean all
 
 tests_run:
 	@$(MAKE) -s -C $(DIR_GENERATOR) tests_run
-#	@$(MAKE) -s -C $(DIR_SOLVER) tests_run
+	@$(MAKE) -s -C $(DIR_SOLVER) tests_run
 	gcovr --exclude='.*main\.c' --exclude tests/
 
 .PHONY: all clean fclean re debug
