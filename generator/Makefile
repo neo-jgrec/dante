@@ -5,11 +5,14 @@
 ## Makefile
 ##
 
+include ../tests/generator/generator_tests_src.mk
+
 PROJECT_NAME			=	generator
 NAME					=	generator
 
 SRC 					= 	src/main.c 			\
-							src/generation.c
+							src/generation.c	\
+							src/print.c
 
 BUILD_DIR				=	build
 OBJ						=	$(SRC:%.c=$(BUILD_DIR)/%.o)
@@ -19,7 +22,6 @@ CFLAGS					:=	-I include/
 WFLAGS					:=	-Wall -Wextra
 
 CRITERION				=	-lcriterion --coverage
-TEST_SRC				=	tests/basics.c
 TEST_NAME				=	unit_tests
 BUILD_TESTS_DIR			=	$(BUILD_DIR)/tests
 TESTS_OBJ				=	$(TEST_SRC:%.c=$(BUILD_DIR)/%.o)
@@ -65,10 +67,6 @@ re:	fclean all
 
 tests_run:	CFLAGS += -lcriterion --coverage
 tests_run:	fclean
-	@if [ ! -d "tests" ]; then\
-		echo -e "\033[1;31m[ERROR]\033[0m" "No tests directory"; \
-		exit 1; \
-	fi
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(BUILD_TESTS_DIR)
 	@gcc -o $(TEST_NAME) $(TEST_SRC) $(SRC) $(CFLAGS) $(WFLAGS) $(CRITERION)\
