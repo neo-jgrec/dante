@@ -16,7 +16,7 @@ jobs:
     - name: Run tests
       run: |
         make tests_run
-        lcov --directory $(pwd) --capture --output-file coverage.info --exclude 'tests/*'
+        lcov --directory $(pwd) --capture --output-file coverage.info --exclude '*tests/*'
     - name: Generate coverage report
       run: |
         genhtml coverage.info --output-directory out
