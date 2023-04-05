@@ -41,6 +41,8 @@ char *maze_generation(int x, int y, status_t status)
 {
     char *maze = malloc(sizeof(char) * (x * y + 1));
 
+    if (maze == NULL)
+        return (NULL);
     init_maze(maze, x, y);
     if (status == IMPERFECT)
         break_walls(maze, x, y);
