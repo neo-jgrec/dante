@@ -1,143 +1,86 @@
 ##
 ## EPITECH PROJECT, 2022
-## Generator
+## Makefile
 ## File description:
 ## Makefile
 ##
 
-.SECONDEXPANSION:
-PROGRAM					:=	generator
-DISPLAY_NAME			:=	Generator
-TEST_PROGRAM			:=	$(PROGRAM)_tests
-TESTS_DIR				:=	$(wildcard tests/)
+PROJECT_NAME			=	generator
+NAME					=	generator
 
-IGNORE_FILE				:=	.gitignore
-CONDING_STYLE_LOG		:=	coding-style-reports.log
+SRC 					= 	src/main.c 			\
+							src/generation.c
 
-$(PROGRAM)_SRCS			:=	$(patsubst ./%,%,$(shell find -type f			\
-							-name '*.c' ! -name ".*"))
-$(TEST_PROGRAM)_SRCS	:=	$(shell find $(TESTS_DIR) -type f				\
-							-name 'test_*.c' ! -name ".*" ! -name "main.c")
+BUILD_DIR				=	build
+OBJ						=	$(SRC:%.c=$(BUILD_DIR)/%.o)
 
-$(PROGRAM)_OBJS			:=	$($(PROGRAM)_SRCS:.c=.o)
-$(TEST_PROGRAM)_OBJS	:=	$($(TEST_PROGRAM)_SRCS:.c=.o)
+CFLAGS					:=	-I include/
 
-$(PROGRAM)_DEPS			:=	$($(PROGRAM)_SRCS:.c=.d)
-$(TEST_PROGRAM)_DEPS	:=	$($(TEST_PROGRAM)_SRCS:.c=.d)
-LIBS					:=	$(COMPILED_LIBS)
-INCLUDE_DIRS			:=	../include/ ./ include/
-RM						:=	rm -f
-CC						:=	gcc
-CFLAGS					=	$(INCLUDE_DIRS:%=-I%)							\
-							-W -Wall -Wextra -Wduplicated-cond				\
-							-Wduplicated-branches -Wlogical-op				\
-							-Wnull-dereference -Wjump-misses-init			\
-							-Wdouble-promotion -Wshadow -Wformat=2
-LDLIBS					=	$(shell echo $(LIBS:%=-l%) | tr '[:upper:]'		\
-							'[:lower:]')
-LDFLAGS					:=	$(LIB_DIR:%=-L%)
+WFLAGS					:=	-Wall -Wextra
 
-all:						$(IGNORE_FILE) $(PROGRAM)
-	@:
+CRITERION				=	-lcriterion --coverage
+TEST_SRC				=	tests/basics.c
+TEST_NAME				=	unit_tests
+BUILD_TESTS_DIR			=	$(BUILD_DIR)/tests
+TESTS_OBJ				=	$(TEST_SRC:%.c=$(BUILD_DIR)/%.o)
 
-debug:						CFLAGS += -g
-debug:						all
+all:	$(NAME)
 
-define \n
+$(NAME):	$(OBJ)
+	@mkdir -p $(BUILD_DIR)
+	@gcc -o $(NAME) $(OBJ) $(CFLAGS) $(WFLAGS) \
+	&& echo -e "\033[1;32m[OK]\033[0m" $(NAME) \
+	|| echo -e "\033[1;31m[KO]\033[0m" $(NAME)
 
+$(BUILD_DIR)/%.o:	%.c
+	@mkdir -p $(dir $@)
+	@gcc -c -o $@ $< $(CFLAGS) $(WFLAGS) \
+	&& echo -e "\033[1;32m[OK]\033[0m" $< \
+	|| echo -e "\033[1;31m[KO]\033[0m" $<
 
-endef
-define $(IGNORE_FILE)_CONTENT
-##
-## EPITECH PROJECT, 2022
-## $(DISPLAY_NAME)
-## File description:
-## $(IGNORE_FILE)
-##
-
-# Ignore object files
-$(shell echo -e '$($(PROGRAM)_OBJS)' | sed -E 's/ /\\n/g')
-$(shell echo -e '$($(TEST_PROGRAM)_OBJS)' | sed -E 's/ /\\n/g')
-
-# Ignore dependency files
-$(shell echo -e '$($(PROGRAM)_DEPS)' | sed -E 's/ /\\n/g')
-$(shell echo -e '$($(TEST_PROGRAM)_DEPS)' | sed -E 's/ /\\n/g')
-
-# Ignore binary files
-$(PROGRAM)
-$(TEST_PROGRAM)
-a.out
-
-# Ignore coverage reports
-*.gc*
-
-# Ignore coding-style logs
-$(CONDING_STYLE_LOG)
-endef
-
-$(IGNORE_FILE):
-	@-echo 'Generating $@ file...'
-	@echo -e "$(subst ${\n},\n,$($@_CONTENT))" > $@
-
-LINK_ECHO				=	Linking ./$@ binary...
-NO_LINK_ECHO			=	No linking for ./$@.
-
-$(TEST_PROGRAM):			LIBS += criterion
-
-$(PROGRAM) $(TEST_PROGRAM):	LINK := true
-$(PROGRAM) $(TEST_PROGRAM): $(COMPILED_LIBS_ARCHIVES) $$($$@_OBJS)
-	@-echo '$(if $(LINK),$(LINK_ECHO),$(NO_LINK_ECHO))'
-	@$(if $(LINK),$(CC) $(CFLAGS) -o $@ $($@_OBJS) $(LDLIBS) $(LDFLAGS),)
-
-%.o:						%.c %.d
-	@-echo 'Compiling $<...'
-	@$(CC) -c $(CFLAGS) $< -o $@
-
-%.d:						%.c
-	@-echo 'Generating dependencies for $<...'
-	@$(CC) $< -MM -MF $@ $(CFLAGS)
-
--include $($(PROGRAM)_DEPS) $($(TEST_PROGRAM)_DEPS)
-
-$(COMPILED_LIBS_ARCHIVES):
-	@-echo 'Compiling $(@:$(LIB_DIR)lib%.a=%) library archive ($@)...'
-	@$(MAKE) -C $(LIB_DIR) $(@:$(LIB_DIR)lib%.a=%)
-
-coding-style:				fclean
-	@-echo 'Checking coding style...'
-	@coding-style.sh . .
-
-tests_run:					$(TEST_PROGRAM)
-	@./$(TEST_PROGRAM) --verbose --always-succeed
-
-tests_debug:				CFLAGS += -g
-tests_debug:				$(TEST_PROGRAM)
-	@-valgrind --trace-children=yes								\
-	./$(TEST_PROGRAM) --verbose --always-succeed
-
-coverage:					CFLAGS += --coverage
-coverage:					tests_run
-	@gcovr --exclude $(TESTS_DIR)
-	@gcovr --exclude $(TESTS_DIR) --branches
+debug:	CFLAGS += -g3
+debug:	re
 
 clean:
-	@$(RM) $($(PROGRAM)_OBJS) $($(TEST_PROGRAM)_OBJS)			\
-	$($(PROGRAM)_DEPS) $($(TEST_PROGRAM)_DEPS)
-	@-echo 'Cleaned-up objects and dependency files.'
-	@find . -name '*~' -name 'vgcore.*' -name '*.gc*'			\
-	-name 'a.out' -name '$(CONDING_STYLE_LOG)' -delete
-	@-echo 'Cleaned-up unecessary files.'
+	@echo -e "\033[1;31m[LIB CLEAN]\033[0m" $(LIB_FOLDER)
+	@for file in $(BUILD_DIR)/*; do \
+		if [ -d $$file ]; then \
+			rm -rf $$file; \
+			echo -e "\033[1;31m[DELETED]\033[0m" $$file; \
+		fi;\
+	done
+	@echo -e "\033[1;31m[CLEAN]\033[0m" $(PROJECT_NAME)
+	@rm -f $(shell find -name '*.gc*' -type f)
 
-fclean:						clean
-	@$(RM) $(PROGRAM)
-	@-echo 'Program deleted.'
-	@$(RM) $(TEST_PROGRAM)
-	@-echo 'Test program deleted.'
+fclean: clean
+	@echo -e "\033[1;31m[LIB FCLEAN]\033[0m" $(LIB_FOLDER)
+	@rm -f $(TEST_NAME)
+	@echo -e "\033[1;31m[DELETED]\033[0m" $(TEST_NAME)
+	@rm -rf $(BUILD_DIR)
+	@echo -e "\033[1;31m[DELETED]\033[0m" $(BUILD_DIR)
+	@rm -f $(NAME)
+	@echo -e "\033[1;31m[DELETED]\033[0m" $(NAME)
 
-re:							fclean all
+re:	fclean all
 
-re_tests:					fclean tests_run
+tests_run:	CFLAGS += -lcriterion --coverage
+tests_run:	fclean
+	@if [ ! -d "tests" ]; then\
+		echo -e "\033[1;31m[ERROR]\033[0m" "No tests directory"; \
+		exit 1; \
+	fi
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_TESTS_DIR)
+	@gcc -o $(TEST_NAME) $(TEST_SRC) $(SRC) $(CFLAGS) $(WFLAGS) $(CRITERION)\
+	&& echo -e "\033[1;32m[OK]\033[0m" $(TEST_NAME)\
+	|| echo -e "\033[1;31m[KO]\033[0m" $(TEST_NAME)
+	@./$(TEST_NAME)
+	mv *.gc* $(BUILD_TESTS_DIR)
+	gcovr --exclude tests/
 
-.PHONY:						all debug tests_run tests_debug	\
-							clean fclean re re_tests libs	\
-							coverage coding-style
+.PHONY: all clean fclean re debug tests_run
+
+.SILENT: all clean fclean re debug tests_run
+
+%:
+	@echo -e "\033[1;31m[ERROR]\033[0m" "No rule to make target '$@'"
