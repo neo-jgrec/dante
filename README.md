@@ -4,10 +4,9 @@ Outils de génération et résolution de labyrinthes
 
 ### Pré-requis
 
-```
-gcc
-make
-```
+- gcc
+- make
+- libc
 
 ### Installation
 
