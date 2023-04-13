@@ -10,17 +10,16 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install lcov
         sudo apt-get install libcriterion-dev
+        sudo apt-get install lcov
         sudo apt-get install gcovr
     - name: Run tests
       run: |
         make tests_run
-        lcov --directory $(pwd) --capture --output-file coverage.info
-        lcov --remove coverage.info '*tests/*' --output-file filtered_coverage.info
-    - name: Generate coverage report
+        lcov --capture --directory . --output-file coverage.info --no-external --exclude '.*main\.c' --exclude '${{ github.workspace }}/tests/*' --exclude build/
+    - name: Display coverage report
       run: |
-        genhtml coverage.info --output-directory out
+        cat coverage.info
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
