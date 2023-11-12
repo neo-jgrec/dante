@@ -44,7 +44,7 @@ Lancement du solveur
 
 ## Coverage
 
-[![codecov](https://codecov.io/gh/neo-jgrec/dante/branch/main/graph/badge.svg?token=7RLP6BTPTS)](https://codecov.io/gh/neo-jgrec/dante)
+[![badge](https://codecov.io/gh/neo-jgrec/dante/branch/main/graph/badge.svg?token=7RLP6BTPTS)](https://codecov.io/gh/neo-jgrec/dante)
 
 ## Auteurs
 
